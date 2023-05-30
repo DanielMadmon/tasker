@@ -13,7 +13,6 @@ osInfo[/etc/alpine-release]=apk
 for f in "${!osInfo[@]}"
 do
     if [[ -f $f ]];then
-        #return "${osInfo[$f]}"
         if [ "${osInfo[$f]}" == "yum" ];then
             return 0
         fi
