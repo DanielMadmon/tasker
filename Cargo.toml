@@ -30,7 +30,6 @@ test = false
 name ="tasker_lib"
 path = "lib/tasker_lib/src/lib.rs"
 test = false
-crate-type = ["lib"] 
 
 
 [dependencies]
