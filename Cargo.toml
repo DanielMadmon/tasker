@@ -14,11 +14,7 @@ members = [
     "bin/tasker_service",
     "bin/taskerctl"
 ]
-[lib]
-name ="tasker_lib"
-path = "lib/tasker_lib/src/lib.rs"
-test = false
-crate-type = ["lib"] 
+
 
 [[bin]]
 name = "tasker_service"
@@ -30,6 +26,13 @@ name = "taskerctl"
 path = "bin/taskerctl/src/main.rs"
 test = false
  
+[lib]
+name ="tasker_lib"
+path = "lib/tasker_lib/src/lib.rs"
+test = false
+crate-type = ["lib"] 
+
+
 [dependencies]
 clap = {version = "4.3.0", features = ["derive"]}
 comfy-table = "6.1.4"
