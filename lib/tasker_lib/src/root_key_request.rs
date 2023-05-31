@@ -2,8 +2,8 @@ use std::fs;
 use std::io::Write;
 use std::path::Path;
 use readable_perms::{FChmodExt,ChmodExt,Permissions};
-
 use themis::keys::SymmetricKey;
+
 
 pub fn get_key_root() -> Vec<u8>{
     let res_get: Option<Vec<u8>> = get_stored_key();
