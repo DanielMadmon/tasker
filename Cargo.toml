@@ -25,6 +25,11 @@ test = false
 name = "taskerctl"
 path = "bin/taskerctl/src/main.rs"
 test = false
+ 
+[lib]
+name ="tasker_lib"
+path = "lib/tasker_lib/src/lib.rs"
+test = false
 
 
 [dependencies]
