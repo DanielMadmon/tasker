@@ -9,9 +9,9 @@ A Simple crate which provides a service and a configuration API for genrating co
 ## Installation
 ### build from source
 
-```git clone https://github.com/DanielMadmon/tasker.git
-  install libthemis on your machine
-  cargo build --release
+```install libthemis on your system
+   clone the repository
+   ./build.sh
 ```
 
 
@@ -20,9 +20,8 @@ A Simple crate which provides a service and a configuration API for genrating co
 
 
 ```
-cd target/release
-./taskerctl install
-systemctl --user enable tasker
+./install.sh
+will solve dependencies and start the service
 
 ```
 ## example, add new task:
@@ -33,15 +32,15 @@ taskerctl add -n freshtheclam -s nu -c "freshclam" -t 40 -u 22
 
 OR
 
-taskerctl help to view all options
+taskerctl help to view all main options
 
-AND
+OR
 
-taskerctl add --help
+taskerctl add --help, to view all available flags for new tasks
 
 ```
 ## configure root tasker
-TODO
+done automatically, by running ./install.sh
 
 
 ## Features
