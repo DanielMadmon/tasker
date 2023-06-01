@@ -1,6 +1,6 @@
 [package]
 name = "tasker_service"
-version = "0.1.3"
+version = "0.1.6"
 edition = "2021"
 description = "a service for executing time based commands"
 license = "GPL-3.0"
