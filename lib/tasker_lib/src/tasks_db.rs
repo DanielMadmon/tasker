@@ -115,8 +115,8 @@ impl TaskEncrypted {
     }
 
     pub fn read_db(key: Vec<u8>) -> Vec<Task> {
-        let mut task_table_enc: Vec<TaskEncrypted> = vec![];
-        let mut task_table_decrypted: Vec<Task> = vec![];
+        let mut task_table_enc: Vec<TaskEncrypted> = Vec::with_capacity(30);
+        let mut task_table_decrypted: Vec<Task> = Vec::with_capacity(30);
         let conn_enum = <TaskEncrypted as enums::ConnDb>::conn_enum();
         match conn_enum {
             Conn::Conn(statement) => {

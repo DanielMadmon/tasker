@@ -153,7 +153,7 @@ impl structs::LogEntryEncrypted {
     pub fn read_logs(key: Vec<u8>) -> Option<Vec<LogEntry>> {
         Self::open_db();
         let conn_enum = <LogEntryEncrypted as enums::ConnDb>::conn_enum();
-        let mut log_table_enc: Vec<LogEntryEncrypted> = vec![];
+        let mut log_table_enc: Vec<LogEntryEncrypted> = Vec::with_capacity(30);
         match conn_enum {
             Conn::Conn(statement) => {
                 let res_stmt = statement.prepare(
