@@ -10,7 +10,7 @@ url="https://github.com/DanielMadmon/tasker"
 license=('GPL3')
 groups=()
 depends=('libthemis')
-makedepends=('cargo','git')
+makedepends=('cargo' 'git')
 provides=("Tasker=0.0.2")
 conflicts=(Tasker)
 install=(tasker.install)
