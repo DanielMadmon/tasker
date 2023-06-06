@@ -116,9 +116,8 @@ struct  AddOptions{
 struct TaskName{
     name:String
 }
-
+#[allow(unused_assignments)]
 fn show_list(){
-
     let task_db: Vec<Task> = read_tasks_db();
     let mut tasks_table: Table = Table::new();
     let mut rows: Vec<Row> = vec![];
@@ -234,18 +233,13 @@ fn logs_output(){
     }
 }
 fn enable(){
-    //set for root and user sysctl enable
-    let res_name = hostname::get().expect("error! can't set service file");
-    let res_name = res_name.to_str().expect("error! can't set up service file");
+    //add option for root service 
     let mut home_dir = simple_home_dir::home_dir().expect("error! can't get user home directory");
-
     home_dir.push(".config/systemd/user/");
-
     let header_1:&str = "[Unit]";
     let desc:&str = "Description=tasker service";
     let header_2:&str = "[Service]";
-    let user:String = "user=".to_string() + res_name;
-    let exec_start:String = "ExecStart=/home/".to_string() + res_name + "/.cargo/bin/tasker_service";
+    let exec_start:String = "ExecStart=/usr/bin/tasker_service".to_string() ;
     let header_3: &str = "[Install]";
     let last_line:&str = "WantedBy=default.target";
 
@@ -258,7 +252,7 @@ fn enable(){
             File::options().append(true).open(home_dir)
             .expect("error! can't edit service file .please check permissions in ~.config/systemd/user/");
         let lines = [header_1, desc, header_2, 
-            user.as_str(), exec_start.as_str(), header_3, last_line];
+            exec_start.as_str(), header_3, last_line];
             for line in lines{
                 writeln!(& mut service_writer, "{line}")
                 .expect("error! can't edit service file .please check permissions in ~.config/systemd/user/");
