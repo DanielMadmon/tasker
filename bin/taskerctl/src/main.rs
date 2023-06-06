@@ -234,6 +234,7 @@ fn logs_output(){
     }
 }
 fn enable(){
+    //set for root and user sysctl enable
     let res_name = hostname::get().expect("error! can't set service file");
     let res_name = res_name.to_str().expect("error! can't set up service file");
     let mut home_dir = simple_home_dir::home_dir().expect("error! can't get user home directory");
