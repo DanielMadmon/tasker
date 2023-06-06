@@ -8,4 +8,4 @@ authors = ["Daniel M. email:danielmadmon@protonmail.com"]
 
 
 [dependencies]
-tasker_lib = "0.0.2"
+tasker_lib = "0.0.3"
