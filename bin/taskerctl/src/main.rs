@@ -272,18 +272,20 @@ fn disable(){
 }
 fn status(){
     let mut is_running:bool = false;
-    let mut pid_num: String = String::new();
+    let mut pid_num: Vec<String> = vec![];
     let system: System = System::new_all();
     for (pid,procces) in system.processes(){
         if procces.name() == "tasker_service"{
             is_running = true;
-            pid_num = pid.to_string();
-            break;
+            pid_num.push(pid.to_string());
         }
     }
     match is_running{
         true => {
-            println!("tasker service is up and running!, pid num: {pid_num}");
+            for pid in pid_num{
+                println!("tasker service is up and running!, pid num: {pid}");
+            }
+            
         }
         false => {
             println!("tasker service is not running");
