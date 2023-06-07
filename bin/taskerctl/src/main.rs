@@ -28,7 +28,7 @@ fn main(){
          add_task(new_task);
          println!("new task added successfully.");
          if let Some(crontab_path) = options.cron {
-            sync_with_crontab(crontab_path);
+            self::cron_syncer::sync_with_crontab(crontab_path);
             println!("synced tasks from crontab successfully")
          }
         }
@@ -300,11 +300,13 @@ fn status(){
 
 
 
-pub mod cron_syncer{
+mod cron_syncer{
     use tasker_lib::taskerctl::add_task;
     use cronparse::CrontabFile;
     use cronparse::crontab::UserCrontabEntry;
-    pub fn sync_with_crontab(path_to_crontab:String){
+    use tasker_lib::taskerctl::Task;
+
+     pub (crate) fn sync_with_crontab(path_to_crontab:String){
         let tasks_from_tab: Vec<Task> = get_crontab(path_to_crontab);
         for task in tasks_from_tab{
             add_task(task);
