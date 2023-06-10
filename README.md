@@ -1,5 +1,8 @@
 
-# Tasker
+
+
+# Tasker 
+![Alt text](tasker_logo.png?raw=true "Title")
 
 A Simple crate which provides a service and a configuration API for genrating commands based tasks ,on time basis.
 
@@ -7,6 +10,18 @@ A Simple crate which provides a service and a configuration API for genrating co
 
 
 ## Installation
+### Arch Linux
+``` 
+yay -S tasker-git
+
+OR
+
+git clone https://aur.archlinux.org/tasker-git.git && cd tasker-git
+makepkg -si
+taskerctl enable
+
+```
+
 ### build from source
 
 ```install libthemis on your system
