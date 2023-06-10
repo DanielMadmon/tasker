@@ -150,7 +150,7 @@ fn sync_crontab_by_id(id_cronjob:i32){
     for job in crontab{
         if job.id == id_cronjob{
             let mut task = Task::new();
-            task.shell = Some(String::from("bash"));
+            task.shell = Some(String::from("bash"));//TODO:Get env.shell
             task.minute = convert_options_u8_i32(job.minute);
             task.hour = convert_options_u8_i32(job.hour);
             task.day_of_month = convert_options_u8_i32(job.day_of_month);
@@ -166,7 +166,7 @@ fn sync_all_crontab(){
     let crontab: Vec<CronJobEntry> = get_crontab();
     for job in crontab{
         let mut task = Task::new();
-        Some(String::from("bash"));
+        task.shell = Some(String::from("bash"));//TODO:get env.shell
         task.minute = convert_options_u8_i32(job.minute);
         task.hour = convert_options_u8_i32(job.hour);
         task.day_of_month = convert_options_u8_i32(job.day_of_month);
