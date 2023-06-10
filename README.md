@@ -2,7 +2,7 @@
 
 
 # Tasker 
-![Alt text](tasker_logo.png?raw=true "Title")
+![Alt text](tasker_logo.png?raw=false "Takser-Logo")
 
 A Simple crate which provides a service and a configuration API for genrating commands based tasks ,on time basis.
 
