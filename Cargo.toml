@@ -12,7 +12,8 @@ homepage = "https://github.com/DanielMadmon/tasker"
 members = [
     "lib/tasker_lib",
     "bin/tasker_service",
-    "bin/taskerctl"
+    "bin/taskerctl",
+    "bin/tasker_gui"
 ]
 
 
@@ -47,3 +48,5 @@ sudo = "0.6.0"
 themis = "0.14.0"
 tasker_lib = "0.0.3"
 cron_list_parser = "0.0.4"
+iced = "0.9.0"
+
