@@ -369,6 +369,7 @@ fn logs_output(){
         }
     }
 }
+
 fn enable(){
     //add option for root service 
     let mut home_dir = simple_home_dir::home_dir().expect("error! can't get user home directory");
@@ -396,7 +397,7 @@ fn enable(){
             }
             let enable = Configure::EnableTaskerService;
             execute_command_install(enable);
-            println!("tasker service enabled Successfully!")
+            println!("tasker service enabled Successfully!");
         }
         Err(err)=>{
             eprintln!("error, can't create service file, info {err:#?}")
