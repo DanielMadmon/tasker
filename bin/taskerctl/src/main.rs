@@ -5,6 +5,7 @@ use tasker_lib::taskerctl::{read_tasks_db,read_logs_db,rm_task,Task,add_task, ex
 use comfy_table::{Table,Row};
 use terminal_text_styler::TerminalStyle;
 use cron_list_parser::{get_crontab,CronJobEntry};
+use std::env;
 
 fn main(){
     let input = ArgsData::parse();
@@ -150,7 +151,7 @@ fn sync_crontab_by_id(id_cronjob:i32){
     for job in crontab{
         if job.id == id_cronjob{
             let mut task = Task::new();
-            task.shell = Some(String::from("bash"));//TODO:Get env.shell
+            task.shell = shell();
             task.minute = convert_options_u8_i32(job.minute);
             task.hour = convert_options_u8_i32(job.hour);
             task.day_of_month = convert_options_u8_i32(job.day_of_month);
@@ -162,11 +163,23 @@ fn sync_crontab_by_id(id_cronjob:i32){
         }
     }
 }
+fn shell()->Option<String>{
+            let mut shell: Option<String> = Some(String::from("bash"));
+            let def_shell = env::var_os("shell");
+
+            if let Some(shell_var) = def_shell {
+                let def_shell_string: Option<&str> = shell_var.to_str();
+                if let Some(conv_ok) = def_shell_string{
+                    shell = Some(conv_ok.to_string());
+                }
+            }
+            shell
+}
 fn sync_all_crontab(){
     let crontab: Vec<CronJobEntry> = get_crontab();
     for job in crontab{
         let mut task = Task::new();
-        task.shell = Some(String::from("bash"));//TODO:get env.shell
+        task.shell = shell();
         task.minute = convert_options_u8_i32(job.minute);
         task.hour = convert_options_u8_i32(job.hour);
         task.day_of_month = convert_options_u8_i32(job.day_of_month);
