@@ -4,6 +4,7 @@ use clap::{Parser,Subcommand,Args};
 use tasker_lib::taskerctl::{read_tasks_db,read_logs_db,rm_task,Task,add_task, execute_command_install,Configure};
 use comfy_table::{Table,Row};
 use terminal_text_styler::TerminalStyle;
+use cron_list_parser::{get_crontab,CronJobEntry};
 
 fn main(){
     let input = ArgsData::parse();
@@ -27,10 +28,6 @@ fn main(){
          new_task.minute = options.minute;
          add_task(new_task);
          println!("new task added successfully.");
-         if let Some(crontab_path) = options.cron {
-            self::cron_syncer::sync_with_crontab(crontab_path);
-            println!("synced tasks from crontab successfully")
-         }
         }
         ArgsInput::Status => {
             status();
@@ -52,6 +49,19 @@ fn main(){
         }
         ArgsInput::Disable => {
             disable();
+        }
+        ArgsInput::Cron(sync_options) => {
+            match sync_options {
+                SyncOptions::Show => {
+                    show_cronjobs_fmt();
+                }
+                SyncOptions::All => {
+                    sync_all_crontab();
+                }
+                SyncOptions::Id(id) => {
+                    sync_crontab_by_id(id.id_num);
+                }
+            }
         }
     }
 }
@@ -82,7 +92,23 @@ enum ArgsInput{
     ///show logs
     Logs,
     ///Output
-    Output
+    Output,
+    ///sync with existing crontab
+    #[clap(subcommand)]
+    Cron(SyncOptions)
+}
+#[derive(Debug,PartialEq,Clone,Subcommand)]
+enum SyncOptions{
+    ///sync all cronjobs with tasker
+    All,
+    ///show cronjobs by id
+    Show,
+    ///sync only specific cronjob by id
+    Id(Id)
+}
+#[derive(Args,Debug,PartialEq,Clone)]
+struct Id{
+    id_num:i32
 }
 
 #[derive(Args,Debug,PartialEq,Clone)]
@@ -114,13 +140,106 @@ struct  AddOptions{
     ///add minute of execution (optional)
     #[arg(short='t',long="minute")]
     minute: Option<i32>,
-    #[arg(long="cron")]
-    cron:Option<String>
 }
 #[derive(Debug,PartialEq,Args,Clone)]
 struct TaskName{
     name:String
 }
+fn sync_crontab_by_id(id_cronjob:i32){
+    let crontab: Vec<CronJobEntry> = get_crontab();
+    for job in crontab{
+        if job.id == id_cronjob{
+            let mut task = Task::new();
+            task.shell = Some(String::from("bash"));
+            task.minute = convert_options_u8_i32(job.minute);
+            task.hour = convert_options_u8_i32(job.hour);
+            task.day_of_month = convert_options_u8_i32(job.day_of_month);
+            task.month = convert_options_u8_i32(job.month);
+            task.day_of_week = convert_options_u8_i32(job.day_of_week);
+            task.command = job.command;
+            add_task(task);
+            println!("synced task with crontab!");
+        }
+    }
+}
+fn sync_all_crontab(){
+    let crontab: Vec<CronJobEntry> = get_crontab();
+    for job in crontab{
+        let mut task = Task::new();
+        Some(String::from("bash"));
+        task.minute = convert_options_u8_i32(job.minute);
+        task.hour = convert_options_u8_i32(job.hour);
+        task.day_of_month = convert_options_u8_i32(job.day_of_month);
+        task.month = convert_options_u8_i32(job.month);
+        task.day_of_week = convert_options_u8_i32(job.day_of_week);
+        task.command = job.command;
+        add_task(task);
+    }
+    println!("synced all tasks with crontab!");
+}
+fn convert_options_u8_i32(option_u8:Option<u8>) -> Option<i32>{
+    let mut option_i32:Option<i32> = None;
+    if let Some (number) = option_u8 {
+        option_i32 = Some(number as i32);
+    }
+    return option_i32;
+}
+
+#[allow(unused_assignments)]
+fn show_cronjobs_fmt(){
+    let cronjobs_list: Vec<CronJobEntry> = get_crontab();
+    let mut cronjobs_table:Table = Table::new();
+    let mut rows:Vec<Row> = vec![];
+    let mut id:i32 = 0;
+    let mut minute:u8= 0;
+    let mut hour:u8 = 0;
+    let mut day_of_month:u8 = 0;
+    let mut month:u8 = 0;
+    let mut day_of_week:u8 = 0;
+    let mut command = String::from(" ");
+
+    for job in cronjobs_list{
+        id = job.id;
+        if let Some(minute_job) = job.minute{
+            minute = minute_job;
+        }
+        if let Some(hour_job) = job.hour{
+            hour = hour_job;
+        }
+        if let Some(day_of_month_job) = job.day_of_month{
+            day_of_month = day_of_month_job;
+        }
+        if let Some(month_job) = job.month{
+            month = month_job;
+        }
+        if let Some(day_of_week_job) = job.day_of_week{
+            day_of_week = day_of_week_job;
+        }
+        if let Some(command_job) = job.command{
+            command = command_job.trim_start().to_string();
+        }
+        rows.push(Row::from(vec![
+            &id.to_string(),
+            &minute.to_string(),
+            &hour.to_string(),
+            &day_of_month.to_string(),
+            &month.to_string(),
+            &day_of_week.to_string(),
+            &command
+        ]));
+    }
+    cronjobs_table
+        .set_header(vec![
+            "id",
+            "minute",
+            "hour",
+            "day_of_month",
+            "month",
+            "day_of_week",
+            "command"]).add_rows(rows);
+            println!("{cronjobs_table}");
+}
+
 #[allow(unused_assignments)]
 fn show_list(){
     let task_db: Vec<Task> = read_tasks_db();
@@ -300,117 +419,4 @@ fn status(){
 
 
 
-mod cron_syncer{
-    use tasker_lib::taskerctl::add_task;
-    use cronparse::CrontabFile;
-    use cronparse::crontab::UserCrontabEntry;
-    use tasker_lib::taskerctl::Task;
 
-     pub (crate) fn sync_with_crontab(path_to_crontab:String){
-        let tasks_from_tab: Vec<Task> = get_crontab(path_to_crontab);
-        for task in tasks_from_tab{
-            add_task(task);
-        }
-    }
-    fn get_crontab(path_to_crontab:String) -> Vec<Task>{
-        type CronFile =  CrontabFile<UserCrontabEntry>;
-        type CronEntries =  CrontabFile::<UserCrontabEntry>;
-        type CronMonthOption<'a> = Option<& 'a cronparse::interval::Interval<cronparse::schedule::Month>>;
-        type CronDomOption<'b> = Option<& 'b cronparse::interval::Interval<cronparse::schedule::Day>>;
-        type CronDowOption<'c> = Option<& 'c cronparse::interval::Interval<cronparse::schedule::DayOfWeek>>;
-        type CronHrsOption<'d> = Option<& 'd cronparse::interval::Interval<cronparse::schedule::Hour>>;
-        type CronMinsOptions<'e> = Option<& 'e cronparse::interval::Interval<cronparse::schedule::Minute>>;
-        type CromMonth = cronparse::schedule::Month;
-        let mut tasks_to_add: Vec<Task> = Vec::new();
-
-        let crontab: CronFile = CronEntries::new(path_to_crontab).expect("error parsing file!");
-        for entry in crontab{
-            if let Ok(entry_ok) = entry{
-                if let Some(cal) = entry_ok.calendar(){
-                    let mut task: Task = Task::new();
-                    if let Some(command) = entry_ok.command(){
-                        task.command = Some(command.to_string());
-                    }
-                   let cron_month: CronMonthOption  = cal.mons.0.first();
-                   if let Some(month) = cron_month{
-                        match month{
-                            cronparse::interval::Interval::Value(month_parsed) => {
-                                let month_cronie: CromMonth = month_parsed.to_owned();
-                                match month_cronie{
-                                    CromMonth::January => task.month = Some(1),
-                                    CromMonth::February => task.month = Some(2),
-                                    CromMonth::March => task.month = Some(3),
-                                    CromMonth::April => task.month = Some(4),
-                                    CromMonth::May => task.month = Some(5),
-                                    CromMonth::June => task.month = Some(6),
-                                    CromMonth::July => task.month = Some(7),
-                                    CromMonth::August => task.month = Some(8),
-                                    CromMonth::September => task.month = Some(9),
-                                    CromMonth::October => task.month = Some(10),
-                                    CromMonth::November => task.month = Some(11),
-                                    CromMonth::December => task.month = Some(12),
-                                }
-                            }
-                            cronparse::interval::Interval::Range(_, _, _) => {}
-                            cronparse::interval::Interval::Full(_) => {}
-                        }
-                   }
-                   let day_of_month: CronDomOption = cal.days.0.first();
-                   if let Some(dom_cronie) = day_of_month{
-                    match dom_cronie{
-                        cronparse::interval::Interval::Value(dom) => {
-                            let dom: i32 = dom.0 as i32;
-                            task.day_of_month = Some(dom);
-                        }
-                        cronparse::interval::Interval::Range(_, _, _) => {}
-                        cronparse::interval::Interval::Full(_) => todo!{}
-                    }
-                   }
-                   let day_of_week: CronDowOption = cal.dows.0.first();
-                   if let Some(dow_cronie) = day_of_week{
-                    match dow_cronie{
-                        cronparse::interval::Interval::Value(dow) => {
-                            let dow = dow.to_owned();
-                            match dow {
-                                cronparse::schedule::DayOfWeek::Sunday => task.day_of_week = Some(1),
-                                cronparse::schedule::DayOfWeek::Monday => task.day_of_week = Some(2),
-                                cronparse::schedule::DayOfWeek::Tuesday => task.day_of_week = Some(3),
-                                cronparse::schedule::DayOfWeek::Wednesday => task.day_of_week = Some(4),
-                                cronparse::schedule::DayOfWeek::Thursday => task.day_of_week = Some(5),
-                                cronparse::schedule::DayOfWeek::Friday => task.day_of_week = Some(6),
-                                cronparse::schedule::DayOfWeek::Saturday => task.day_of_week = Some(7),
-                            }
-                        }
-                        cronparse::interval::Interval::Range(_, _, _) => {}
-                        cronparse::interval::Interval::Full(_) => {}
-                    }
-                   }
-                   let hour: CronHrsOption = cal.hrs.0.first();
-                   if let Some(hrs_cronie) = hour {
-                    match hrs_cronie {
-                        cronparse::interval::Interval::Value(hour) => {
-                            let hour: i32 = hour.0 as i32;
-                            task.hour = Some(hour);
-                        }
-                        cronparse::interval::Interval::Range(_, _, _) => {}
-                        cronparse::interval::Interval::Full(_) => {}
-                    }
-                   }
-                   let minute: CronMinsOptions = cal.mins.0.first();
-                   if let Some(mins_cronie) = minute {
-                       match mins_cronie{
-                        cronparse::interval::Interval::Value(minutes) => {
-                            let minute:i32 = minutes.0 as i32;
-                            task.minute = Some(minute);
-                        }
-                        cronparse::interval::Interval::Range(_, _, _) => {}
-                        cronparse::interval::Interval::Full(_) => {}
-                    }
-                   }
-                   tasks_to_add.push(task);
-                }
-            }
-        }
-        return tasks_to_add;
-    }
-}

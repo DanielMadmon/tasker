@@ -27,7 +27,6 @@ path = "bin/taskerctl/src/main.rs"
 test = false
 
 
-
 [dependencies]
 clap = {version = "4.3.0", features = ["derive"]}
 comfy-table = "6.1.4"
@@ -47,4 +46,4 @@ rusqlite = "0.29.0"
 sudo = "0.6.0"
 themis = "0.14.0"
 tasker_lib = "0.0.3"
-cronparse = "0.5.1"
+cron_list_parser = "0.0.4"
