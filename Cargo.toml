@@ -27,6 +27,10 @@ name = "taskerctl"
 path = "bin/taskerctl/src/main.rs"
 test = false
 
+[[bin]]
+name = "tasker_gui"
+path = "bin/tasker_gui/src/main.rs"
+test = false
 
 [dependencies]
 clap = {version = "4.3.0", features = ["derive"]}

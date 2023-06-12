@@ -7,3 +7,5 @@ edition = "2021"
 
 [dependencies]
 iced = "0.9.0"
+tasker_lib = { version = "0.0.3", path = "../../lib/tasker_lib" }
+
