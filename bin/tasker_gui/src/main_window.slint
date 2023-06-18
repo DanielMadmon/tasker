@@ -7,12 +7,13 @@ export struct TableRow {
 
 export component App inherits Window { 
     in-out property <[TableRow]> table;
+    background: rgb(77, 77, 77);
     width: 1000px;
     height: 700px;
             ScrollView{
                 enabled: true;
                 width: 80%;
-                height: 80%;
+                height: 30%;
                 VerticalLayout { 
                     width: 80%;
                     height: 30%;
@@ -23,7 +24,7 @@ export component App inherits Window {
                             max-width: 200px;
                             min-width: 200px;
                             height: 50%;
-                            background: black;
+                            background: rgb(168, 145, 48);
                             border-width: 0.2px;
                             border-color: white;
                             clip:true;
@@ -41,7 +42,7 @@ export component App inherits Window {
                         max-width: 200px;
                         min-width: 200px;
                         height: 50%;
-                        background: black;
+                        background: rgb(168, 145, 48);
                         border-width: 0.2px;
                         border-color: white;
                         clip: true;
