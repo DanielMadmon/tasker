@@ -1,0 +1,65 @@
+import { GroupBox , ScrollView} from "std-widgets.slint";
+
+export struct TableRow {
+    name : string
+}
+
+
+export component App inherits Window { 
+    in-out property <[TableRow]> table;
+    width: 1000px;
+    height: 700px;
+            ScrollView{
+                enabled: true;
+                width: 80%;
+                height: 80%;
+                VerticalLayout { 
+                    width: 80%;
+                    height: 30%;
+                for table[i] in root.table: Text{
+                    HorizontalLayout{
+                        alignment: start;
+                        Rectangle{
+                            max-width: 200px;
+                            min-width: 200px;
+                            height: 50%;
+                            background: black;
+                            border-width: 0.2px;
+                            border-color: white;
+                            clip:true;
+
+                            TextInput{
+                        enabled: false;
+                        single-line:true;
+                        wrap: TextWrap.no-wrap;
+                        text:table.name; 
+                        max-width:200px;
+                        height:50%;
+                        }
+                    }     
+                    Rectangle{
+                        max-width: 200px;
+                        min-width: 200px;
+                        height: 50%;
+                        background: black;
+                        border-width: 0.2px;
+                        border-color: white;
+                        clip: true;
+
+                        TextInput{
+                    enabled: false;
+                    single-line:true;
+                    wrap: TextWrap.no-wrap;
+                    text:table.name; 
+                    max-width:200px;
+                    height:50%;
+                    }
+                }
+            }
+    }
+            }
+               
+    }
+    
+}
+ 
