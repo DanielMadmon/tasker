@@ -1,13 +1,21 @@
 import { GroupBox , ScrollView} from "std-widgets.slint";
 
 export struct TableRow {
-    name : string
+    name : string,
+    shell: string,
+    command: string,
+    comment: string,
+    month : string,
+    day_of_month : string,
+    day_of_week : string,
+    hour : string,
+    minute : string
 }
 
 
 export component App inherits Window { 
     in-out property <[TableRow]> table;
-    background: rgb(77, 77, 77);
+    background: rgb(33, 33, 33);
     width: 1000px;
     height: 700px;
             ScrollView{
@@ -15,50 +23,169 @@ export component App inherits Window {
                 width: 80%;
                 height: 30%;
                 VerticalLayout { 
+                    spacing: 10px;
                     width: 80%;
                     height: 30%;
+                    
                 for table[i] in root.table: Text{
                     HorizontalLayout{
-                        alignment: start;
-                        Rectangle{
-                            max-width: 200px;
-                            min-width: 200px;
-                            height: 50%;
-                            background: rgb(168, 145, 48);
-                            border-width: 0.2px;
-                            border-color: white;
-                            clip:true;
+                        alignment: center;
+                        spacing: 10px;
+                Rectangle{
+                    max-width: 200px;
+                    min-width: 200px;
+                    height: 50%;
+                    background: rgb(48, 48, 48);
+                    border-width: 0.2px;
+                    border-color: white;
+                    clip:true;
 
-                            TextInput{
-                        enabled: false;
-                        single-line:true;
-                        wrap: TextWrap.no-wrap;
-                        text:table.name; 
-                        max-width:200px;
-                        height:50%;
-                        }
-                    }     
-                    Rectangle{
-                        max-width: 200px;
-                        min-width: 200px;
-                        height: 50%;
-                        background: rgb(168, 145, 48);
-                        border-width: 0.2px;
-                        border-color: white;
-                        clip: true;
+                    TextInput{
+                color: rgb(255,255,255);
+                enabled: false;
+                single-line:true;
+                wrap: TextWrap.no-wrap;
+                text:table.name; 
+                max-width:200px;
+                height:50%;
+                }
+            }     
+                Rectangle{
+                    max-width: 200px;
+                    min-width: 200px;
+                    height: 50%;
+                    background: rgb(48, 48, 48);
+                    border-width: 0.2px;
+                    border-color: white;
+                    clip: true;
 
-                        TextInput{
-                    enabled: false;
-                    single-line:true;
-                    wrap: TextWrap.no-wrap;
-                    text:table.name; 
-                    max-width:200px;
-                    height:50%;
-                    }
+                    TextInput{
+                color: rgb(255,255,255);
+                enabled: false;
+                single-line:true;
+                wrap: TextWrap.no-wrap;
+                text:table.shell; 
+                max-width:200px;
+                height:50%;
                 }
             }
-    }
+                Rectangle{
+                    max-width: 200px;
+                    min-width: 200px;
+                    height: 50%;
+                    background: rgb(48, 48, 48);
+                    border-width: 0.2px;
+                    border-color: white;
+                    clip: true;
+
+                    TextInput{
+                color: rgb(255,255,255);
+                enabled: false;
+                single-line:true;
+                wrap: TextWrap.no-wrap;
+                text:table.command; 
+                max-width:200px;
+                height:50%;
+                }
             }
+                Rectangle{
+                    max-width: 200px;
+                    min-width: 200px;
+                    height: 50%;
+                    background: rgb(48, 48, 48);
+                    border-width: 0.2px;
+                    border-color: white;
+                    clip: true;
+
+                    TextInput{
+                color: rgb(255,255,255);
+                enabled: false;
+                single-line:true;
+                wrap: TextWrap.no-wrap;
+                text:table.month; 
+                max-width:200px;
+                height:50%;
+                }
+            }
+                Rectangle{
+                    max-width: 200px;
+                    min-width: 200px;
+                    height: 50%;
+                    background: rgb(48, 48, 48);
+                    border-width: 0.2px;
+                    border-color: white;
+                    clip: true;
+
+                    TextInput{
+                color: rgb(255,255,255);
+                enabled: false;
+                single-line:true;
+                wrap: TextWrap.no-wrap;
+                text:table.day_of_month; 
+                max-width:200px;
+                height:50%;
+                }
+            }
+                Rectangle{
+                    max-width: 200px;
+                    min-width: 200px;
+                    height: 50%;
+                    background: rgb(48, 48, 48);
+                    border-width: 0.2px;
+                    border-color: white;
+                    clip: true;
+
+                    TextInput{
+                color: rgb(255,255,255);
+                enabled: false;
+                single-line:true;
+                wrap: TextWrap.no-wrap;
+                text:table.day_of_week; 
+                max-width:200px;
+                height:50%;
+                }
+            }
+                Rectangle{
+                    max-width: 200px;
+                    min-width: 200px;
+                    height: 50%;
+                    background: rgb(48, 48, 48);
+                    border-width: 0.2px;
+                    border-color: white;
+                    clip: true;
+
+                    TextInput{
+                color: rgb(255,255,255);
+                enabled: false;
+                single-line:true;
+                wrap: TextWrap.no-wrap;
+                text:table.hour; 
+                max-width:200px;
+                height:50%;
+                }
+                }
+                Rectangle{
+                    max-width: 200px;
+                    min-width: 200px;
+                    height: 50%;
+                    background: rgb(48, 48, 48);
+                    border-width: 0.2px;
+                    border-color: white;
+                    clip: true;
+
+                    TextInput{
+                color: rgb(255,255,255);
+                enabled: false;
+                single-line:true;
+                wrap: TextWrap.no-wrap;
+                text:table.minute; 
+                max-width:200px;
+                height:50%;
+                    }
+                  }
+               }
+            }
+        }
                
     }
     
